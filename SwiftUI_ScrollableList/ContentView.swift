@@ -11,32 +11,30 @@ struct ContentView: View {
     let networkingClient = NetworkingClient()
     @State private var images: [UIImage] = []
     var body: some View {
-        List {
-            ForEach(images, id:\.self) {image in
-                HStack {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                }.listRowInsets(EdgeInsets())
-            }
-        }
-        .listStyle(PlainListStyle())
+        ScrollView(.vertical){
+            LazyVStack(spacing: 0) {
+                ForEach(images, id:\.self) {image in
+                    HStack {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    }.listRowInsets(EdgeInsets())
+                }
+            }.listRowInsets(EdgeInsets())
 
-        .onAppear {
-            print("On appear starts")
-            networkingClient.execute { result in
-                print("Start1")
-                switch result {
-                case .success(let responsePosts):
-                    print("Start2")
-
-                    self.networkingClient.urlArray = responsePosts
-                    self.startMultipleImageDownload()
-                case .failure(let error):
-                    print("ERROR - Getting data from the network client ", error)
+            .onAppear {
+                networkingClient.execute { result in
+                    switch result {
+                    case .success(let responsePosts):
+                        self.networkingClient.urlArray = responsePosts
+                        self.startMultipleImageDownload()
+                    case .failure(let error):
+                        print("ERROR - Getting data from the network client ", error)
+                    }
                 }
             }
         }
+        
     }
     
     func startMultipleImageDownload() {

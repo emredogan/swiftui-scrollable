@@ -13,7 +13,7 @@ import UIKit
 
 class NetworkingClient {
     private var imageSizeString = "test"
-    let numberOfPicturesToDownload = 4
+    let numberOfPicturesToDownload = 50
 
     var urlArray = [URL]()
     var images = [UIImage]()
